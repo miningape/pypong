@@ -18,6 +18,15 @@ class player:
         text(str(self.score), self.x + 40, 32)
         text(str(self.score), self.x - 40, 32)
         
+    def shrink(self):
+        if (self.height > 20):
+            self.height -= 20
+    
+    def grow(self):
+        self.height += 10
+    
+        
+        
 class ball:
     def __init__(self, x_pos, y_pos, radius, velocity, direction):
         self.x = x_pos
@@ -49,25 +58,30 @@ class ball:
         if (self.velocity < 0):
             # Touching the left panel
             if ((self.x - self.radius) <= (left_player.x + left_player.width) and self.y >= left_player.y and self.y <= left_player.y + left_player.height):
-                self.velocity = -self.velocity
+                self.velocity = -self.velocity*1.05
                 self.yvelocity = left_player.direction * abs(self.velocity)
+                left_player.shrink()
             
             # Passing the left border of the game
             if ((self.x - self.radius) <= 0):
                 right.score += 1
                 destroyed = True
+                left_player.grow()
+                
             
         # Travelling to the right
         if (self.velocity > 0):
             # Touching the right panel
             if ((self.x + self.radius) >= (right_player.x) and self.y >= right_player.y and self.y <= right_player.y + right_player.height):
-                self.velocity = -self.velocity
+                self.velocity = -self.velocity*1.05
                 self.yvelocity = right_player.direction * abs(self.velocity)
+                right_player.shrink()
             
             # Passing the right border of the game
             if ((self.x + self.radius) >= screen_width):
                 left.score += 1
                 destroyed = True
+                right_player.grow()
             
         # Touching either the upper or lower boundary of the game
         if (self.y >= screen_height or self.y <= 0):
@@ -79,13 +93,15 @@ left = player(10, 200, 20, 250)
 right = player(screen_width - 10 - 20, 200, 20, 250)
 ping = ball(screen_width/2, screen_height/2, 10, 125, -1)
 
+colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#8B00FF']
+
 
 def setup():
     size(screen_width, screen_height)
     
 def draw():
     # Drawing routine
-    background(167)
+    background(colors[(left.score+right.score)%7])
     left.draw()
     right.draw()
     ping.draw()
@@ -122,3 +138,4 @@ def keyPressed():
         left.direction = 0
     if (key == 'k' and key == 'i'):
         right.direction = 0
+    
