@@ -1,2 +1,3 @@
 # pypong
-I coded this while I was bored in class today
+To run open "pypong.pyde" in processing and hit the play button in the upper right hand corner.
+Controls: W, S to move the left panel up/down. and I, K to move the right panel up/down.
